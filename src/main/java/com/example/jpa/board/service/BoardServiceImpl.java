@@ -1,13 +1,14 @@
 package com.example.jpa.board.service;
 
+import com.example.jpa.board.entity.Board;
 import com.example.jpa.board.entity.BoardType;
-import com.example.jpa.board.model.BoardTypeInput;
-import com.example.jpa.board.model.BoardTypeUsing;
-import com.example.jpa.board.model.ServiceResult;
+import com.example.jpa.board.model.*;
 import com.example.jpa.board.repository.BoardRepository;
+import com.example.jpa.board.repository.BoardTypeCustomRepository;
 import com.example.jpa.board.repository.BoardTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardTypeRepository boardTypeRepository;
     private final BoardRepository boardRepository;
+    private final BoardTypeCustomRepository boardTypeCustomRepository;
 
     @Override
     public ServiceResult addBoard(BoardTypeInput boardTypeInput) {
@@ -87,6 +89,46 @@ public class BoardServiceImpl implements BoardService{
         BoardType boardType = optionalBoardType.get();
         boardType.setUsingYn(boardTypeUsing.isUsingYn());
         boardTypeRepository.save(boardType);
+        return ServiceResult.success();
+    }
+
+    @Override
+    public List<BoardTypeCount> getBoardTypeCount() {
+        return boardTypeCustomRepository.getBoardTypeCount();
+    }
+
+    @Override
+    public ServiceResult setBoardTop(Long id, boolean topYn) {
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        if (!optionalBoard.isPresent()) {
+            return ServiceResult.fail("게시글이 존재하지 않습니다.");
+        }
+
+        Board board = optionalBoard.get();
+        if (board.isTopYn() == topYn) {
+            if (topYn) {
+                return ServiceResult.fail("이미 게시글이 최상단 배치가 해제되어 있습니다.");
+            } else {
+                return ServiceResult.fail("이미 게시글이 최상단에 배치되어 있습니다.");
+            }
+        }
+        board.setTopYn(topYn);
+        boardRepository.save(board);
+
+        return ServiceResult.success();
+    }
+
+    @Override
+    public ServiceResult setBoardPeriod(Long id, BoardPeriod boardPeriod) {
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        if (!optionalBoard.isPresent()) {
+            return ServiceResult.fail("게시글이 존재하지 않습니다.");
+        }
+        Board board = optionalBoard.get();
+        board.setPublishStartDate(boardPeriod.getStartDate());
+        board.setPublishEndDate(boardPeriod.getEndDate());
+        boardRepository.save(board);
+
         return ServiceResult.success();
     }
 }

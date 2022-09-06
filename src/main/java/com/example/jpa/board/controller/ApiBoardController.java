@@ -1,35 +1,19 @@
 package com.example.jpa.board.controller;
 
 import com.example.jpa.board.entity.BoardType;
-import com.example.jpa.board.model.BoardTypeInput;
-import com.example.jpa.board.model.BoardTypeUsing;
-import com.example.jpa.board.model.ServiceResult;
+import com.example.jpa.board.model.*;
 import com.example.jpa.board.service.BoardService;
-import com.example.jpa.notice.entity.Notice;
-import com.example.jpa.notice.exception.AlreadyDeletedException;
-import com.example.jpa.notice.exception.DuplicateNoticeException;
-import com.example.jpa.notice.exception.NoticeNotFoundException;
-import com.example.jpa.notice.model.NoticeDeleteInput;
-import com.example.jpa.notice.model.NoticeInput;
-import com.example.jpa.notice.model.NoticeModel;
+import com.example.jpa.common.model.ResponseResult;
 import com.example.jpa.notice.model.ResponseError;
-import com.example.jpa.notice.repository.NoticeRepository;
 import com.example.jpa.user.model.ResponseMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -91,4 +75,33 @@ public class ApiBoardController {
 
         return ResponseEntity.ok().body(ResponseMessage.success(result));
     }
+
+    @GetMapping("/api/board/type/count")
+    public ResponseEntity<?> boardTypeCount() {
+        List<BoardTypeCount> list = boardService.getBoardTypeCount();
+        return ResponseEntity.ok().body(ResponseMessage.success(list));
+    }
+
+    @PatchMapping("/api/board/type/{id}/top")
+    public ResponseEntity<?> boardPostTop(@PathVariable Long id) {
+        return ResponseEntity.ok().body(ResponseMessage.success(boardService.setBoardTop(id, true)));
+    }
+
+    @PatchMapping("/api/board/type/{id}/top/clear")
+    public ResponseEntity<?> boardPostTopClear(@PathVariable Long id) {
+        return ResponseEntity.ok().body(ResponseMessage.success(boardService.setBoardTop(id, false)));
+    }
+
+    @PatchMapping("/api/board/type/{id}/publish")
+    public ResponseEntity<?> boardPeriod(@PathVariable Long id, @RequestBody BoardPeriod boardPeriod) {
+
+        ServiceResult result = boardService.setBoardPeriod(id, boardPeriod);
+        if (!result.isResult()) {
+            return ResponseResult.fail(result.getMessage());
+        }
+
+        return ResponseResult.success();
+    }
+
+
 }

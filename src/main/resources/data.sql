@@ -27,5 +27,9 @@ insert into BOARD_TYPE (ID, BOARD_NAME, REG_DATE, USING_YN) values (1, '게시�
 insert into BOARD_TYPE (ID, BOARD_NAME, REG_DATE, USING_YN) values (2, '게시판2', '2022-09-06 02:56:31.000000', 1);
 
 
-insert into BOARD (ID, BOARD_TYPE_ID, USER_ID, TITLE, CONTENTS, REG_DATE) values (1, 1, 1, '제목1', '내용1', '2022-09-06 03:03:31.000000');
-insert into BOARD (ID, BOARD_TYPE_ID, USER_ID, TITLE, CONTENTS, REG_DATE) values (2, 1, 1, '제목2', '내용2', '2022-09-06 03:03:31.000000');
+insert into BOARD (ID, BOARD_TYPE_ID, USER_ID, TITLE, CONTENTS, REG_DATE, TOP_YN) values (1, 1, 1, '제목1', '내용1', '2022-09-06 03:03:31.000000', 0);
+insert into BOARD (ID, BOARD_TYPE_ID, USER_ID, TITLE, CONTENTS, REG_DATE, TOP_YN) values (2, 1, 1, '제목2', '내용2', '2022-09-06 03:03:31.000000', 0);
+insert into BOARD (ID, BOARD_TYPE_ID, USER_ID, TITLE, CONTENTS, REG_DATE, TOP_YN) values (3, 1, 1, '제목2', '내용2', '2022-09-06 03:03:31.000000', 0);
+insert into BOARD (ID, BOARD_TYPE_ID, USER_ID, TITLE, CONTENTS, REG_DATE, TOP_YN) values (4, 2, 1, '제목2', '내용2', '2022-09-06 03:03:31.000000', 0);
+insert into BOARD (ID, BOARD_TYPE_ID, USER_ID, TITLE, CONTENTS, REG_DATE, TOP_YN) values (5, 2, 1, '제목2', '내용2', '2022-09-06 03:03:31.000000', 0);
+insert into BOARD (ID, BOARD_TYPE_ID, USER_ID, TITLE, CONTENTS, REG_DATE, TOP_YN) values (6, 2, 1, '제목2', '내용2', '2022-09-06 03:03:31.000000', 0);
