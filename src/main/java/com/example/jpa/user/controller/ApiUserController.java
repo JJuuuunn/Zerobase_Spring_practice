@@ -3,6 +3,11 @@ package com.example.jpa.user.controller;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.example.jpa.board.entity.Board;
+import com.example.jpa.board.entity.BoardComment;
+import com.example.jpa.board.model.ServiceResult;
+import com.example.jpa.board.service.BoardService;
+import com.example.jpa.common.model.ResponseResult;
 import com.example.jpa.notice.entity.Notice;
 import com.example.jpa.notice.entity.NoticeLike;
 import com.example.jpa.notice.model.NoticeResponse;
@@ -15,6 +20,7 @@ import com.example.jpa.user.exception.PasswordNotMatchException;
 import com.example.jpa.user.exception.UserNotFoundException;
 import com.example.jpa.user.model.*;
 import com.example.jpa.user.repository.UserRepository;
+import com.example.jpa.user.service.PointService;
 import com.example.jpa.util.JWTUtils;
 import com.example.jpa.util.PasswordUtils;
 import lombok.Data;
@@ -43,6 +49,9 @@ public class ApiUserController {
     private final UserRepository userRepository;
     private final NoticeRepository noticeRepository;
     private final NoticeLikeRepository noticeLikeRepository;
+
+    private final BoardService boardService;
+    private final PointService pointService;
 
     /*
     @PostMapping("/api/user")
@@ -407,7 +416,6 @@ public class ApiUserController {
     public ResponseEntity<?> removeToken(@RequestHeader("F-TOKEN") String token) {
 
         String email = "";
-
         try {
             email = JWTUtils.getIssuer(token);
         } catch (SignatureVerificationException e) {
@@ -419,5 +427,43 @@ public class ApiUserController {
         //블랙리스트 작성
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/user/board/post")
+    public ResponseEntity<?> myPost(@RequestHeader("F-TOKEN") String token) {
+        String email = "";
+        try {
+            email = JWTUtils.getIssuer(token);
+        } catch (SignatureVerificationException e) {
+            return ResponseResult.fail("토큰 정보가 정확하지 않습니다.");
+        }
+
+        List<Board> list = boardService.postList(email);
+        return ResponseResult.success(list);
+    }
+
+    @GetMapping("/api/user/board/comment")
+    public ResponseEntity<?> myComments(@RequestHeader("F-TOKEN") String token) {
+        String email = "";
+        try {
+            email = JWTUtils.getIssuer(token);
+        } catch (SignatureVerificationException e) {
+            return ResponseResult.fail("토큰 정보가 정확하지 않습니다.");
+        }
+
+        List<BoardComment> list = boardService.commentList(email);
+        return ResponseResult.success(list);
+    }
+
+    @PostMapping("api/user/point")
+    public ResponseEntity<?> userPoint(@RequestHeader("F-TOKEN") String token, @RequestBody UserPointInput userPointInput) {
+        String email = "";
+        try {
+            email = JWTUtils.getIssuer(token);
+        } catch (SignatureVerificationException e) {
+            return ResponseResult.fail("토큰 정보가 정확하지 않습니다.");
+        }
+        ServiceResult result = pointService.addPoint(email, userPointInput);
+        return ResponseResult.success(result);
     }
 }

@@ -9,7 +9,7 @@ spring:
 #    url: jdbc:h2:file:\C:\dev\eclipse_workspace\sample01\backofficeDb
 
     driver-class-name: org.h2.Driver
-    username: root
+    username: zero
     password:
 
   jpa:

@@ -74,3 +74,104 @@ CREATE TABLE BOARD (
     constraint FK_BOARD_TYPE_ID foreign key(BOARD_TYPE_ID) references BOARD_TYPE(ID),
     constraint FK_BOARD_USER_ID foreign key(USER_ID) references USER(ID)
 );
+
+CREATE TABLE BOARD_HITS (
+    ID                  BIGINT auto_increment primary key,
+    BOARD_ID            BIGINT,
+    USER_ID             BIGINT,
+    REG_DATE            TIMESTAMP,
+
+    constraint FK_BOARD_HITS_BOARD_ID foreign key(BOARD_ID) references BOARD(ID),
+    constraint FK_BOARD_HITS_USER_ID foreign key(USER_ID) references USER(ID)
+);
+
+CREATE TABLE BOARD_LIKE (
+    ID                  BIGINT auto_increment primary key,
+    BOARD_ID            BIGINT,
+    USER_ID             BIGINT,
+    REG_DATE            TIMESTAMP,
+
+    constraint FK_BOARD_LIKE_BOARD_ID foreign key(BOARD_ID) references BOARD(ID),
+    constraint FK_BOARD_LIKE_USER_ID foreign key(USER_ID) references USER(ID)
+);
+
+CREATE TABLE BOARD_BAD_REPORT (
+    ID                  BIGINT auto_increment primary key,
+    BOARD_ID            BIGINT,
+    BOARD_USER_ID       BIGINT,
+    BOARD_TITLE         VARCHAR(255),
+    BOARD_CONTENTS      VARCHAR(255),
+    BOARD_REG_DATE      TIMESTAMP,
+
+    USER_ID             BIGINT,
+    USER_EMAIL          VARCHAR(255),
+    USER_NAME           VARCHAR(255),
+
+    COMMENTS            VARCHAR(255),
+    REG_DATE            TIMESTAMP
+);
+
+CREATE TABLE BOARD_SCRAP (
+    ID                  BIGINT auto_increment primary key,
+
+    USER_ID             BIGINT,
+
+    BOARD_ID            BIGINT,
+    BOARD_TYPE_ID       BIGINT,
+    BOARD_USER_ID       BIGINT,
+    BOARD_TITLE         VARCHAR(255),
+    BOARD_CONTENTS      VARCHAR(255),
+    BOARD_REG_DATE      TIMESTAMP,
+
+    REG_DATE            TIMESTAMP,
+
+    constraint FK_BOARD_SCRAP_USER_ID foreign key(USER_ID) references USER(ID)
+);
+
+CREATE TABLE BOARD_BOOKMARK (
+    ID                  BIGINT auto_increment primary key,
+
+    USER_ID             BIGINT,
+
+    BOARD_ID            BIGINT,
+    BOARD_TYPE_ID       BIGINT,
+    BOARD_TITLE         VARCHAR(255),
+    BOARD_URL           VARCHAR(255),
+
+    REG_DATE            TIMESTAMP,
+
+    constraint FK_BOARD_BOOKMARK_USER_ID foreign key(USER_ID) references USER(ID)
+);
+
+CREATE TABLE USER_INTEREST (
+    ID                  BIGINT auto_increment primary key,
+
+    USER_ID             BIGINT,
+    INTEREST_USER_ID    BIGINT,
+    REG_DATE            TIMESTAMP,
+
+    constraint FK_USER_INTEREST_USER_ID foreign key(USER_ID) references USER(ID),
+    constraint FK_USER_INTEREST_INTERESTUSER_ID foreign key(INTEREST_USER_ID) references USER(ID)
+);
+
+CREATE TABLE BOARD_COMMENT (
+    ID                  BIGINT auto_increment primary key,
+
+    USER_ID             BIGINT,
+    BOARD_ID            BIGINT,
+    COMMENTS            VARCHAR(255),
+    REG_DATE            TIMESTAMP,
+
+    constraint FK_USER_COMMENT_USER_ID foreign key(USER_ID) references USER(ID),
+    constraint FK_USER_COMMENT_BOARD_ID foreign key(BOARD_ID) references BOARD(ID)
+);
+
+CREATE TABLE USER_POINT (
+    ID                  BIGINT auto_increment primary key,
+
+    USER_ID             BIGINT,
+    USER_POINT_TYPE     VARCHAR(255),
+    POINT               BIGINT,
+
+    constraint FK_USER_POINT_USER_ID foreign key(USER_ID) references USER(ID)
+);
